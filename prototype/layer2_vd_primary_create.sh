@@ -12,22 +12,22 @@ vd_id=$(format_id $4)
 stripe_id=$(format_id $5)
 thinmeta_grp0_id=$(format_id $6)
 thinmeta_grp0_leg0_id=$(format_id $7)
-thinmeta_grp0_leg0_mgr_id=$(format_id $8)
-thinmeta_grp0_leg0_tr_addr=$(format_id $9)
-thinmeta_grp0_leg0_tr_svc_id=$(format_id ${10})
+thinmeta_grp0_leg0_l1_mgr_id=$(format_id $8)
+thinmeta_grp0_leg0_l1_tr_addr=$9
+thinmeta_grp0_leg0_l1_tr_svc_id=${10}
 thinmeta_grp0_leg1_id=$(format_id ${11})
-thinmeta_grp0_leg1_mgr_id=$(format_id ${12})
-thinmeta_grp0_leg1_tr_addr=$(format_id ${13})
-thinmeta_grp0_leg1_tr_svc_id=$(format_id ${14})
+thinmeta_grp0_leg1_l1_mgr_id=$(format_id ${12})
+thinmeta_grp0_leg1_l1_tr_addr=${13}
+thinmeta_grp0_leg1_l1_tr_svc_id=${14}
 thindata_grp0_id=$(format_id ${15})
 thindata_grp0_leg0_id=$(format_id ${16})
-thindata_grp0_leg0_mgr_id=$(format_id ${17})
-thindata_grp0_leg0_tr_addr=$(format_id ${18})
-thindata_grp0_leg0_tr_svc_id=$(format_id ${19})
+thindata_grp0_leg0_l1_mgr_id=$(format_id ${17})
+thindata_grp0_leg0_l1_tr_addr=${18}
+thindata_grp0_leg0_l1_tr_svc_id=${19}
 thindata_grp0_leg1_id=$(format_id ${20})
-thindata_grp0_leg1_mgr_id=$(format_id ${21})
-thindata_grp0_leg1_tr_addr=$(format_id ${22})
-thindata_grp0_leg1_tr_svc_id=$(format_id ${23})
+thindata_grp0_leg1_l1_mgr_id=$(format_id ${21})
+thindata_grp0_leg1_l1_tr_addr=${22}
+thindata_grp0_leg1_l1_tr_svc_id=${23}
 thinmeta_grp0_raid1meta_mb=${24}
 thinmeta_grp0_raid1data_mb=${25}
 thindata_grp0_raid1meta_mb=${26}
@@ -124,34 +124,34 @@ dm_create ${thinpool_name} "${table}"
 
 dmsetup message ${thinpool_name} 0 "create_thin ${DEFAULT_THIN_DEV_ID}"
 
-thindev_name=$(get_thindev_name ${prim_mgr_id} ${vd_id} ${stripe_id} ${DEFAULT_THIN_DEV_ID})
+thindev_name=$(get_thindev_name ${prim_mgr_id} ${vd_id} ${stripe_id} ${DEFAULT_THIN_DEV_ID_32BIT})
 thindev_path="/dev/mapper/${thindev_name}"
-table="0 ${thindev_sectors} thin ${thinpool_path} ${DEFAULT_THIN_DEV_ID}"
-dm_creater ${thindev_name} "${table}"
+table="0 ${thindev_sectors} thin ${thinpool_path} ${DEFAULT_THIN_DEV_ID_32BIT}"
+dm_create ${thindev_name} "${table}"
 
 if [ "${sec0_mgr_id}" != "-" ]; then
-    prim_to_sec0_name=$(get_prim_to_sec_name ${prim_mgr_id} ${vd_id} ${stripe_id} ${DEFAULT_THIN_DEV_ID} ${sec0_mgr_id})
+    prim_to_sec0_name=$(get_prim_to_sec_name ${prim_mgr_id} ${vd_id} ${stripe_id} ${DEFAULT_THIN_DEV_ID_32BIT} ${sec0_mgr_id})
     prim_to_sec0_path="/dev/mapper/${prim_to_sec0_name}"
     table="0 ${thindev_sectors} linear ${thindev_path} 0"
     dm_create ${prim_to_sec0_name} "${table}"
 
-    prim_to_sec0_tgt_nqn=$(get_prim_to_sec_tgt_nqn ${prim_mgr_id} ${vd_id} ${stripe_id} ${DEFAULT_THIN_DEV_ID} ${sec0_mgr_id})
+    prim_to_sec0_tgt_nqn=$(get_prim_to_sec_tgt_nqn ${prim_mgr_id} ${vd_id} ${stripe_id} ${DEFAULT_THIN_DEV_ID_32BIT} ${sec0_mgr_id})
     prim_to_sec0_host_nqn=$(get_host_nqn ${sec0_host_name})
     nvmet_create ${prim_to_sec0_tgt_nqn} ${prim_to_sec0_path} ${prim_to_sec0_host_nqn} ${prim_port_num} ${ANA_GROUP_OPTIMIZED}
 fi
 
 for i in $(seq ${cntlr_cnt}); do
-    cntlr_mgr_id=$1
+    cntlr_mgr_id=$(format_id ${1})
     cntlr_host_name=$2
     shift 2
-    prim_to_cntlr_name=$(get_prim_to_cntlr_name ${prim_mgr_id} ${vd_id} ${stripe_id} ${DEFAULT_THIN_DEV_ID} ${cntlr_mgr_id})
+    prim_to_cntlr_name=$(get_prim_to_cntlr_name ${prim_mgr_id} ${vd_id} ${stripe_id} ${DEFAULT_THIN_DEV_ID_32BIT} ${cntlr_mgr_id})
     prim_to_cntlr_path="/dev/mapper/${prim_to_cntlr_name}"
     table="0 ${thindev_sectors} linear ${thindev_path} 0"
     dm_create ${prim_to_cntlr_name} "${table}"
 
-    l2_to_cntlr_tgt_nqn=$(get_l2_to_cntlr_tgt_nqn ${vd_id} ${stripe_id} ${DEFAULT_THIN_DEV_ID} ${cntlr_mgr_id})
+    l2_to_cntlr_tgt_nqn=$(get_l2_to_cntlr_tgt_nqn ${vd_id} ${stripe_id} ${DEFAULT_THIN_DEV_ID_32BIT} ${cntlr_mgr_id})
     l2_to_cntlr_host_nqn=$(get_host_nqn ${cntlr_host_name})
-    nvmet_create ${prim_to_cntlr_tgt_nqn} ${prim_to_cntlr_path} ${prim_to_cntlr_host_nqn} ${prim_port_num} ${ANA_GROUP_OPTIMIZED}
+    nvmet_create ${l2_to_cntlr_tgt_nqn} ${prim_to_cntlr_path} ${l2_to_cntlr_host_nqn} ${prim_port_num} ${ANA_GROUP_OPTIMIZED}
 done
 
 echo "done"

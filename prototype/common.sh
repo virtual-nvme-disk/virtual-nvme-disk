@@ -465,6 +465,16 @@ function get_prim_to_cntlr_name()
     echo "${DEV_PREFIX}-${prim_mgr_id}-${vd_id}-${DEV_TYPE_PRIM_TO_CNTLR}-${stripe_id}-${dev_id}-${cntlr_mgr_id}"
 }
 
+function get_sec_to_cntlr_name()
+{
+    sec_mgr_id=$1
+    vd_id=$2
+    stripe_id=$3
+    dev_id=$4
+    cntlr_mgr_id=$5
+    echo "${DEV_PREFIX}-${sec_mgr_id}-${vd_id}-${DEV_TYPE_PRIM_TO_CNTLR}-${stripe_id}-${dev_id}-${cntlr_mgr_id}"
+}
+
 function get_leg_to_prim_tgt_nqn()
 {
     l1_mgr_id=$1
@@ -478,17 +488,19 @@ function get_prim_to_sec_tgt_nqn()
 {
     prim_mgr_id=$1
     vd_id=$2
-    thin_id=$3
-    sec_mgr_id=$4
-    echo "${NQN_PREFIX}:${prim_mgr_id}:${vd_id}:${NQN_TYPE_PRIM_TO_SEC_TGT}:${thin_id}:${sec_mgr_id}"
+    stripe_id=$3
+    dev_id=$4
+    sec_mgr_id=$5
+    echo "${NQN_PREFIX}:${prim_mgr_id}:${vd_id}:${NQN_TYPE_PRIM_TO_SEC_TGT}:${stripe_id}:${dev_id}:${sec_mgr_id}"
 }
 
 function get_l2_to_cntlr_tgt_nqn()
 {
     vd_id=$1
-    thin_id=$2
-    cntlr_mgr_id=$3
-    echo "${NQN_PREFIX}:${MPATH_MGR_ID}:${vd_id}:${NQN_TYPE_L2_TO_CNTLR_TGT}:${thin_id}:${cntlr_mgr_id}"
+    stripe_id=$2
+    dev_id=$3
+    cntlr_mgr_id=$4
+    echo "${NQN_PREFIX}:${MPATH_MGR_ID}:${vd_id}:${NQN_TYPE_L2_TO_CNTLR_TGT}:${stripe_id}:${dev_id}:${cntlr_mgr_id}"
 }
 
 function get_host_nqn()
