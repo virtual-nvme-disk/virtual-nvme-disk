@@ -44,6 +44,7 @@ DEV_TYPE_FINAL="3000"
 NQN_TYPE_LEG_TO_PRIM_TGT="0000"
 NQN_TYPE_PRIM_TO_SEC_TGT="0001"
 NQN_TYPE_L2_TO_CNTLR_TGT="0002"
+NQN_TYPE_FINAL_TGT="0003"
 NQN_TYPE_HOST="1000"
 
 PRIM_CNTLID_MIN=11
@@ -153,7 +154,7 @@ function nvmet_create()
     attr_cntlid_min="$6"
     attr_cntlid_max="$7"
 
-    echo "nvmet_create [${nqn}] [${dev_path}] [${host_nqn}] [${port_num}] [${ana_group}] [${attr_cntlid_min} [${attr_cntlid_max}]]"
+    echo "nvmet_create [${nqn}] [${dev_path}] [${host_nqn}] [${port_num}] [${ana_group}] [${attr_cntlid_min}] [${attr_cntlid_max}]"
 
     nqn_path="${NVMET_PATH}/subsystems/${nqn}"
     mkdir ${nqn_path}
@@ -525,6 +526,13 @@ function get_l2_to_cntlr_tgt_nqn()
     dev_id=$3
     cntlr_mgr_id=$4
     echo "${NQN_PREFIX}:${MPATH_MGR_ID}:${vd_id}:${NQN_TYPE_L2_TO_CNTLR_TGT}:${stripe_id}:${dev_id}:${cntlr_mgr_id}"
+}
+
+function get_final_tgt_nqn()
+{
+    vd_id=$1
+    dev_id=$2
+    echo "${NQN_PREFIX}:${MPATH_MGR_ID}:${vd_id}:${NQN_TYPE_FINAL_TGT}:${dev_id}"
 }
 
 function get_host_nqn()

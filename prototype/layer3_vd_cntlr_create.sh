@@ -6,12 +6,16 @@ CURR_DIR=$(readlink -f $(dirname $0))
 source ${CURR_DIR}/common.sh
 
 cntlr_mgr_id=$(format_id $1)
-cntlr_host_name=$2
-vd_id=$(format_id $3)
-thindev_mb=$4
-stripe_cnt=$5
+cntlr_port_num=$2
+cntlr_host_name=$3
+vd_id=$(format_id $4)
+external_host_nqn=$5
+cntlid_min=$6
+cntlid_max=$7
+thindev_mb=$8
+stripe_cnt=$9
 
-shift 5
+shift 9
 
 total_sectors=$((thindev_mb*stripe_cnt*1024*2))
 
@@ -34,6 +38,10 @@ for i in $(seq ${stripe_cnt}); do
 done
 
 final_dev_name=$(get_final_dev_name ${cntlr_mgr_id} ${vd_id} ${DEFAULT_THIN_DEV_ID_32BIT})
+final_dev_path="/dev/mapper/${final_dev_name}"
 dm_create ${final_dev_name} "${table}"
+
+final_tgt_nqn=$(get_final_tgt_nqn ${vd_id} ${DEFAULT_THIN_DEV_ID_32BIT})
+nvmet_create ${final_tgt_nqn} ${final_dev_path} ${external_host_nqn} ${cntlr_port_num} ${ANA_GROUP_OPTIMIZED} ${cntlid_min} ${cntlid_max}
 
 echo "done"
