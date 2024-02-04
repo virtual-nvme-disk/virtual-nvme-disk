@@ -81,11 +81,15 @@ l3_cntlr0_mgr_id=${global_id} && global_id=$((global_id+1))
 l3_cntlr0_port_num=7
 l3_cntlr0_tr_addr=$server_A_ip
 l3_cntlr0_tr_svc_id=4430
+l3_cntlr0_cntlid_min=11
+l3_cntlr0_cntlid_max=20
 
 l3_cntlr1_mgr_id=${global_id} && global_id=$((global_id+1))
 l3_cntlr1_port_num=7
 l3_cntlr1_tr_addr=$server_B_ip
 l3_cntlr1_tr_svc_id=4430
+l3_cntlr1_cntlid_min=21
+l3_cntlr1_cntlid_max=30
 
 vd_id=${global_id} && global_id=$((global_id+1))
 vd_internal_id=1
@@ -115,3 +119,6 @@ thindata_raid1data_mb=100
 thinmeta_leg_mb=$((thinmeta_raid1meta_mb+thinmeta_raid1data_mb))
 thindata_leg_mb=$((thindata_raid1meta_mb+thindata_raid1data_mb))
 thindev_mb=1000
+
+final_tgt_nqn="nqn.2024-01.io.vnd.37833e0135d44e5ab0a1fff158b9d03b:00000000:0000000f:0003:00000000"
+external_host_nqn="nqn.2014-08.org.nvmexpress:uuid:16c2fe2c-94fd-4a9b-b0d2-fab74d3fb38b"
