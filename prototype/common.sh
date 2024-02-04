@@ -29,20 +29,20 @@ VG_PREFIX="vnd.${RANDOM_PREFIX}"
 
 DEV_TYPE_LEG_LV="1000"
 DEV_TYPE_LEG_TO_PRIM="1001"
-DEV_TYPE_MIRRORMETA="2000"
-DEV_TYPE_MIRRORDATA="2001"
+DEV_TYPE_RAIDMETA="2000"
+DEV_TYPE_RAIDDATA="2001"
 DEV_TYPE_GRP="2002"
 DEV_TYPE_THINMETA="2003"
 DEV_TYPE_THINDATA="2004"
 DEV_TYPE_THINPOOL="2005"
 DEV_TYPE_THINDEV="2006"
 DEV_TYPE_PRIM_TO_SEC="2007"
-DEV_TYPE_PRIM_TO_L3="2008"
+DEV_TYPE_PRIM_TO_CNTLR="2008"
 DEV_TYPE_SEC_TO_L3="2109"
 
-NQN_TYPE_LEG_TO_PRIM_TARGET="0000"
-NQN_TYPE_PRIM_TO_SEC_TARGET="0001"
-NQN_TYPE_L3_TARGET="0002"
+NQN_TYPE_LEG_TO_PRIM_TGT="0000"
+NQN_TYPE_PRIM_TO_SEC_TGT="0001"
+NQN_TYPE_L2_TO_CNTLR_TGT="0002"
 NQN_TYPE_HOST="1000"
 
 function format_id()
@@ -50,42 +50,7 @@ function format_id()
     printf "%08x" $1
 }
 
-function get_vg_name()
-{
-    mgr_id=$1
-    echo "${VG_PREFIX}-${mgr_id}"
-}
-function get_leg_lv_name()
-{
-    mgr_id=$1
-    vd_id=$2
-    leg_id=$3
-    echo "${DEV_PREFIX}-${mgr_id}-${vd_id}-${DEV_TYPE_LEG_LV}-${leg_id}"
-}
-
-function get_leg_to_prim_name()
-{
-    mgr_id=$1
-    vd_id=$2
-    leg_id=$3
-    prim_mgr_id=$4
-    echo "${DEV_PREFIX}-${mgr_id}-${vd_id}-${DEV_TYPE_LEG_TO_PRIM}-${leg_id}-${prim_mgr_id}"
-}
-
-function get_leg_to_prim_tgt_nqn()
-{
-    mgr_id=$1
-    vd_id=$2
-    leg_id=$3
-    prim_mgr_id=$4
-    echo "${NQN_PREFIX}:${mgr_id}:${vd_id}:${NQN_TYPE_LEG_TO_PRIM_TGT}:${leg_id}:${prim_mgr_id}"
-}
-
-function get_host_nqn()
-{
-    host_name=$1
-    echo "${NQN_PREFIX}:${NQN_TYPE_HOST}:${host_name}"
-}
+MPATH_MGR_ID=$(format_id 0)
 
 MAX_RETRY=100
 RETRY_INTERVAL=0.1
@@ -391,4 +356,143 @@ function lvm_lv_delete()
         echo "remove ${lv_path}"
         lvremove -f ${lv_path}
     fi
+}
+
+function get_vg_name()
+{
+    l1_mgr_id=$1
+    echo "${VG_PREFIX}-${l1_mgr_id}"
+}
+function get_leg_lv_name()
+{
+    l1_mgr_id=$1
+    vd_id=$2
+    leg_id=$3
+    echo "${DEV_PREFIX}-${l1_mgr_id}-${vd_id}-${DEV_TYPE_LEG_LV}-${leg_id}"
+}
+
+function get_leg_to_prim_name()
+{
+    l1_mgr_id=$1
+    vd_id=$2
+    leg_id=$3
+    prim_mgr_id=$4
+    echo "${DEV_PREFIX}-${l1_mgr_id}-${vd_id}-${DEV_TYPE_LEG_TO_PRIM}-${leg_id}-${prim_mgr_id}"
+}
+
+function get_raidmeta_name()
+{
+    prim_mgr_id=$1
+    vd_id=$2
+    leg_id=$3
+    echo "${DEV_PREFIX}-${prim_mgr_id}-${vd_id}-${DEV_TYPE_RAIDMETA}-${leg_id}"
+}
+
+function get_raiddata_name()
+{
+    prim_mgr_id=$1
+    vd_id=$2
+    leg_id=$3
+    echo "${DEV_PREFIX}-${prim_mgr_id}-${vd_id}-${DEV_TYPE_RAIDDATA}-${leg_id}"
+}
+
+function get_grp_name()
+{
+    prim_mgr_id=$1
+    vd_id=$2
+    grp_id=$3
+    echo "${DEV_PREFIX}-${prim_mgr_id}-${vd_id}-${DEV_TYPE_GRP}-${grp_id}"
+}
+
+function get_thinmeta_name()
+{
+    prim_mgr_id=$1
+    vd_id=$2
+    stripe_id=$3
+    echo "${DEV_PREFIX}-${prim_mgr_id}-${vd_id}-${DEV_TYPE_THINMETA}-${stripe_id}"
+}
+
+function get_thindata_name()
+{
+    prim_mgr_id=$1
+    vd_id=$2
+    stripe_id=$3
+    echo "${DEV_PREFIX}-${prim_mgr_id}-${vd_id}-${DEV_TYPE_THINDATA}-${stripe_id}"
+}
+
+function get_thinpool_name()
+{
+    prim_mgr_id=$1
+    vd_id=$2
+    stripe_id=$3
+    echo "${DEV_PREFIX}-${prim_mgr_id}-${vd_id}-${DEV_TYPE_THINPOOL}-${stripe_id}"
+}
+
+function get_thinpool_name()
+{
+    prim_mgr_id=$1
+    vd_id=$2
+    stripe_id=$3
+    echo "${DEV_PREFIX}-${prim_mgr_id}-${vd_id}-${DEV_TYPE_THINPOOL}-${stripe_id}"
+}
+
+function get_thindev_name()
+{
+    prim_mgr_id=$1
+    vd_id=$2
+    stripe_id=$3
+    dev_id=$4
+    echo "${DEV_PREFIX}-${prim_mgr_id}-${vd_id}-${DEV_TYPE_THINDEV}-${stripe_id}-${dev_id}"
+}
+
+function get_prim_to_sec_name()
+{
+    prim_mgr_id=$1
+    vd_id=$2
+    stripe_id=$3
+    dev_id=$4
+    sec_mgr_id=$5
+    echo "${DEV_PREFIX}-${prim_mgr_id}-${vd_id}-${DEV_TYPE_PRIM_TO_SEC}-${stripe_id}-${dev_id}-${sec_mgr_id}"
+}
+
+function get_prim_to_cntlr_name()
+{
+    prim_mgr_id=$1
+    vd_id=$2
+    stripe_id=$3
+    dev_id=$4
+    cntlr_mgr_id=$5
+    echo "${DEV_PREFIX}-${prim_mgr_id}-${vd_id}-${DEV_TYPE_PRIM_TO_CNTLR}-${stripe_id}-${dev_id}-${cntlr_mgr_id}"
+}
+
+function get_leg_to_prim_tgt_nqn()
+{
+    l1_mgr_id=$1
+    vd_id=$2
+    leg_id=$3
+    prim_mgr_id=$4
+    echo "${NQN_PREFIX}:${l1_mgr_id}:${vd_id}:${NQN_TYPE_LEG_TO_PRIM_TGT}:${leg_id}:${prim_mgr_id}"
+}
+
+function get_prim_to_sec_tgt_nqn()
+{
+    prim_mgr_id=$1
+    vd_id=$2
+    thin_id=$3
+    sec_mgr_id=$4
+    echo "${NQN_PREFIX}:${prim_mgr_id}:${vd_id}:${NQN_TYPE_PRIM_TO_SEC_TGT}:${thin_id}:${sec_mgr_id}"
+}
+
+function get_l2_to_cntlr_tgt_nqn()
+{
+    vd_id=$1
+    thin_id=$2
+    cntlr_mgr_id=$3
+    echo "${NQN_PREFIX}:${MPATH_MGR_ID}:${vd_id}:${NQN_TYPE_L2_TO_CNTLR_TGT}:${thin_id}:${cntlr_mgr_id}"
+}
+
+function get_host_nqn()
+{
+    host_name=$1
+    echo "${NQN_PREFIX}:${NQN_TYPE_HOST}:${host_name}"
 }

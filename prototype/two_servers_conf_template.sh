@@ -2,11 +2,12 @@
 
 server_A_ip=<replace_with_server_A_ip>
 server_B_ip=<replace_with_server_B_ip>
+
 host_name_A="host_A"
 host_name_B="host_B"
 stripe_cnt=2
 
-global_id=0
+global_id=1
 
 stripe0_thinmeta_grp0_leg0_l1_mgr_id=${global_id} && global_id=$((global_id+1))
 stripe0_thinmeta_grp0_leg0_l1_pv_path=/dev/loop241
@@ -76,36 +77,36 @@ stripe1_l2_sec0_port_id=6
 stripe1_l2_sec0_tr_addr=$server_B_ip
 stripe1_l2_sec0_tr_svc_id=4421
 
-l3_0_mgr_id=${global_id} && global_id=$((global_id+1))
-l3_0_port_num=7
-l3_0_tr_addr=$server_A_ip
-l3_0_tr_svc_id=4430
+cntlr0_mgr_id=${global_id} && global_id=$((global_id+1))
+cntlr0_port_num=7
+cntlr0_tr_addr=$server_A_ip
+cntlr0_tr_svc_id=4430
 
-l3_1_mgr_id=${global_id} && global_id=$((global_id+1))
-l3_1_port_num=7
-l3_1_tr_addr=$server_B_ip
-l3_1_tr_svc_id=4430
+cntlr1_mgr_id=${global_id} && global_id=$((global_id+1))
+cntlr1_port_num=7
+cntlr1_tr_addr=$server_B_ip
+cntlr1_tr_svc_id=4430
 
 vd_id=${global_id} && global_id=$((global_id+1))
-curr_vd_id=0
+vd_internal_id=1
 
-stripe0_id=${curr_vd_id} && curr_vd_id=$((curr_vd_id+1))
-stripe0_thinpool_id=${curr_vd_id} && curr_vd_id=$((curr_vd_id+1))
-stripe0_thinmeta_grp0_id=${curr_vd_id} && curr_vd_id=$((curr_vd_id+1))
-stripe0_thinmeta_grp0_leg0_id=${curr_vd_id} && curr_vd_id=$((curr_vd_id+1))
-stripe0_thinmeta_grp0_leg1_id=${curr_vd_id} && curr_vd_id=$((curr_vd_id+1))
-stripe0_thindata_grp0_id=${curr_vd_id} && curr_vd_id=$((curr_vd_id+1))
-stripe0_thindata_grp0_leg0_id=${curr_vd_id} && curr_vd_id=$((curr_vd_id+1))
-stripe0_thindata_grp0_leg1_id=${curr_vd_id} && curr_vd_id=$((curr_vd_id+1))
+stripe0_id=${vd_internal_id} && vd_internal_id=$((vd_internal_id+1))
+stripe0_thinpool_id=${vd_internal_id} && vd_internal_id=$((vd_internal_id+1))
+stripe0_thinmeta_grp0_id=${vd_internal_id} && vd_internal_id=$((vd_internal_id+1))
+stripe0_thinmeta_grp0_leg0_id=${vd_internal_id} && vd_internal_id=$((vd_internal_id+1))
+stripe0_thinmeta_grp0_leg1_id=${vd_internal_id} && vd_internal_id=$((vd_internal_id+1))
+stripe0_thindata_grp0_id=${vd_internal_id} && vd_internal_id=$((vd_internal_id+1))
+stripe0_thindata_grp0_leg0_id=${vd_internal_id} && vd_internal_id=$((vd_internal_id+1))
+stripe0_thindata_grp0_leg1_id=${vd_internal_id} && vd_internal_id=$((vd_internal_id+1))
 
-stripe1_id=${curr_vd_id} && curr_vd_id=$((curr_vd_id+1))
-stripe1_thinpool_id=${curr_vd_id} && curr_vd_id=$((curr_vd_id+1))
-stripe1_thinmeta_grp0_id=${curr_vd_id} && curr_vd_id=$((curr_vd_id+1))
-stripe1_thinmeta_grp0_leg0_id=${curr_vd_id} && curr_vd_id=$((curr_vd_id+1))
-stripe1_thinmeta_grp0_leg1_id=${curr_vd_id} && curr_vd_id=$((curr_vd_id+1))
-stripe1_thindata_grp0_id=${curr_vd_id} && curr_vd_id=$((curr_vd_id+1))
-stripe1_thindata_grp0_leg0_id=${curr_vd_id} && curr_vd_id=$((curr_vd_id+1))
-stripe1_thindata_grp0_leg1_id=${curr_vd_id} && curr_vd_id=$((curr_vd_id+1))
+stripe1_id=${vd_internal_id} && vd_internal_id=$((vd_internal_id+1))
+stripe1_thinpool_id=${vd_internal_id} && vd_internal_id=$((vd_internal_id+1))
+stripe1_thinmeta_grp0_id=${vd_internal_id} && vd_internal_id=$((vd_internal_id+1))
+stripe1_thinmeta_grp0_leg0_id=${vd_internal_id} && vd_internal_id=$((vd_internal_id+1))
+stripe1_thinmeta_grp0_leg1_id=${vd_internal_id} && vd_internal_id=$((vd_internal_id+1))
+stripe1_thindata_grp0_id=${vd_internal_id} && vd_internal_id=$((vd_internal_id+1))
+stripe1_thindata_grp0_leg0_id=${vd_internal_id} && vd_internal_id=$((vd_internal_id+1))
+stripe1_thindata_grp0_leg1_id=${vd_internal_id} && vd_internal_id=$((vd_internal_id+1))
 
 thinmeta_mirrormeta_mb=1
 thinmeta_mirrordata_mb=10
