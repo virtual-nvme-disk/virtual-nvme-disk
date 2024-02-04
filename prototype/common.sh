@@ -39,11 +39,17 @@ DEV_TYPE_THINDEV="2006"
 DEV_TYPE_PRIM_TO_SEC="2007"
 DEV_TYPE_PRIM_TO_CNTLR="2008"
 DEV_TYPE_SEC_TO_L3="2109"
+DEV_TYPE_FINAL="3000"
 
 NQN_TYPE_LEG_TO_PRIM_TGT="0000"
 NQN_TYPE_PRIM_TO_SEC_TGT="0001"
 NQN_TYPE_L2_TO_CNTLR_TGT="0002"
 NQN_TYPE_HOST="1000"
+
+PRIM_CNTLID_MIN=11
+PRIM_CNTLID_MAX=20
+SEC0_CNTLID_MIN=21
+SEC0_CNTLID_MAX=30
 
 function format_id()
 {
@@ -144,12 +150,22 @@ function nvmet_create()
     host_nqn=$3
     port_num=$4
     ana_group=$5
+    attr_cntlid_min="$6"
+    attr_cntlid_max="$7"
 
-    echo "nvmet_create [${nqn}] [${dev_path}] [${host_nqn}] [${port_num}] [${ana_group}]"
+    echo "nvmet_create [${nqn}] [${dev_path}] [${host_nqn}] [${port_num}] [${ana_group}] [${attr_cntlid_min} [${attr_cntlid_max}]]"
 
     nqn_path="${NVMET_PATH}/subsystems/${nqn}"
     mkdir ${nqn_path}
     wait_on_path ${nqn_path}
+
+    if [ "${attr_cntlid_min}" != "" ]; then
+        echo ${attr_cntlid_min} > "${nqn_path}/attr_cntlid_min"
+    fi
+
+    if [ "${attr_cntlid_max}" != "" ]; then
+        echo ${attr_cntlid_max} > "${nqn_path}/attr_cntlid_max"
+    fi
 
     ns_path="${nqn_path}/namespaces/${NS_ID}"
     mkdir ${ns_path}
@@ -473,6 +489,14 @@ function get_sec_to_cntlr_name()
     dev_id=$4
     cntlr_mgr_id=$5
     echo "${DEV_PREFIX}-${sec_mgr_id}-${vd_id}-${DEV_TYPE_PRIM_TO_CNTLR}-${stripe_id}-${dev_id}-${cntlr_mgr_id}"
+}
+
+function get_final_dev_name()
+{
+    cntlr_mgr_id=$1
+    vd_id=$2
+    dev_id=$3
+    echo "${DEV_PREFIX}-${cntlr_mgr_id}-${vd_id}-${DEV_TYPE_FINAL}-${dev_id}"
 }
 
 function get_leg_to_prim_tgt_nqn()

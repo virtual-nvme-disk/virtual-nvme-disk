@@ -37,7 +37,7 @@ for i in $(seq ${cntlr_cnt}); do
 
     l2_to_cntlr_tgt_nqn=$(get_l2_to_cntlr_tgt_nqn ${vd_id} ${stripe_id} ${DEFAULT_THIN_DEV_ID_32BIT} ${cntlr_mgr_id})
     l2_to_cntlr_host_nqn=$(get_host_nqn ${cntlr_host_name})
-    nvmet_create ${l2_to_cntlr_tgt_nqn} ${sec_to_cntlr_path} ${l2_to_cntlr_host_nqn} ${sec_port_num} ${ANA_GROUP_NON_OPTIMIZED}
+    nvmet_create ${l2_to_cntlr_tgt_nqn} ${sec_to_cntlr_path} ${l2_to_cntlr_host_nqn} ${sec_port_num} ${ANA_GROUP_NON_OPTIMIZED} ${SEC0_CNTLID_MIN} ${SEC0_CNTLID_MAX}
 done
 
 echo "done"
