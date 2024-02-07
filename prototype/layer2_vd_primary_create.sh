@@ -83,9 +83,9 @@ function create_raid1_grp()
     leg0_data_name=$(get_raiddata_name ${prim_mgr_id} ${vd_id} ${leg0_id})
     leg0_data_path="/dev/mapper/${leg0_data_name}"
     leg1_meta_name=$(get_raidmeta_name ${prim_mgr_id} ${vd_id} ${leg1_id})
-    leg1_meta_path="/dev/mapper/${leg0_meta_name}"
+    leg1_meta_path="/dev/mapper/${leg1_meta_name}"
     leg1_data_name=$(get_raiddata_name ${prim_mgr_id} ${vd_id} ${leg1_id})
-    leg1_data_path="/dev/mapper/${leg0_data_name}"
+    leg1_data_path="/dev/mapper/${leg1_data_name}"
 
     dd if=/dev/zero of=${leg0_meta_path} bs=4k count=1
     dd if=/dev/zero of=${leg1_meta_path} bs=4k count=1
