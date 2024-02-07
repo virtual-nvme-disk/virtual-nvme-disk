@@ -28,7 +28,7 @@ thindata_grp0_leg1_id=$(format_id ${20})
 thindata_grp0_leg1_l1_mgr_id=$(format_id ${21})
 thindata_grp0_leg1_l1_tr_addr=${22}
 thindata_grp0_leg1_l1_tr_svc_id=${23}
-sec0_mgr_id=$(format_id ${24})
+sec0_mgr_id_unformat=${24}
 sec0_host_name=${25}
 cntlr_cnt=${26}
 
@@ -72,7 +72,8 @@ for i in $(seq ${cntlr_cnt}); do
     dm_delete ${prim_to_cntlr_name}
 done
 
-if [ "${sec0_mgr_id}" != "-" ]; then
+if [ "${sec0_mgr_id_unformat}" != "-" ]; then
+    sec0_mgr_id=$(format_id ${sec0_mgr_id_unformat})
     prim_to_sec0_tgt_nqn=$(get_prim_to_sec_tgt_nqn ${prim_mgr_id} ${vd_id} ${stripe_id} ${DEFAULT_THIN_DEV_ID_32BIT} ${sec0_mgr_id})
     prim_to_sec0_host_nqn=$(get_host_nqn ${sec0_host_name})
     nvmet_delete ${prim_to_sec0_tgt_nqn} ${prim_to_sec0_host_nqn} ${prim_port_num}
