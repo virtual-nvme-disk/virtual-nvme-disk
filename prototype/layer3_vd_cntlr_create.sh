@@ -31,7 +31,9 @@ for i in $(seq ${stripe_cnt}); do
     l2_to_cntlr_tgt_nqn=$(get_l2_to_cntlr_tgt_nqn ${vd_id} ${stripe_id} ${DEFAULT_THIN_DEV_ID_32BIT} ${cntlr_mgr_id})
     l2_to_cntlr_host_nqn=$(get_host_nqn ${cntlr_host_name})
     nvme_connect ${l2_to_cntlr_tgt_nqn} ${l2_prim_tr_addr} ${l2_prim_tr_svc_id} ${l2_to_cntlr_host_nqn}
-    nvme_connect ${l2_to_cntlr_tgt_nqn} ${l2_sec0_tr_addr} ${l2_sec0_tr_svc_id} ${l2_to_cntlr_host_nqn}
+    if [ "${l2_sec0_tr_addr}" != "-" ]; then
+        nvme_connect ${l2_to_cntlr_tgt_nqn} ${l2_sec0_tr_addr} ${l2_sec0_tr_svc_id} ${l2_to_cntlr_host_nqn}
+    fi
 
     dev_path=$(nvme_dev_path_from_nqn ${l2_to_cntlr_tgt_nqn})
     table="${table} - ${dev_path}"

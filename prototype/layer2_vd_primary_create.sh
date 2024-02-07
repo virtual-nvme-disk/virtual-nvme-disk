@@ -33,7 +33,7 @@ thinmeta_grp0_raid1data_mb=${25}
 thindata_grp0_raid1meta_mb=${26}
 thindata_grp0_raid1data_mb=${27}
 thindev_mb=${28}
-sec0_mgr_id=$(format_id ${29})
+sec0_mgr_id_unformat=${29}
 sec0_host_name=${30}
 cntlr_cnt=${31}
 
@@ -129,7 +129,8 @@ thindev_path="/dev/mapper/${thindev_name}"
 table="0 ${thindev_sectors} thin ${thinpool_path} ${DEFAULT_THIN_DEV_ID_32BIT}"
 dm_create ${thindev_name} "${table}"
 
-if [ "${sec0_mgr_id}" != "-" ]; then
+if [ "${sec0_mgr_id_unformat}" != "-" ]; then
+    sec0_mgr_id=$(format_id ${sec0_mgr_id_unformat})
     prim_to_sec0_name=$(get_prim_to_sec_name ${prim_mgr_id} ${vd_id} ${stripe_id} ${DEFAULT_THIN_DEV_ID_32BIT} ${sec0_mgr_id})
     prim_to_sec0_path="/dev/mapper/${prim_to_sec0_name}"
     table="0 ${thindev_sectors} linear ${thindev_path} 0"
