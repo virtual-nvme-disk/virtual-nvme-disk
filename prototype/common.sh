@@ -38,7 +38,7 @@ DEV_TYPE_THINPOOL="2005"
 DEV_TYPE_THINDEV="2006"
 DEV_TYPE_PRIM_TO_SEC="2007"
 DEV_TYPE_PRIM_TO_CNTLR="2008"
-DEV_TYPE_SEC_TO_L3="2109"
+DEV_TYPE_SEC_TO_CNTLR="2109"
 DEV_TYPE_FINAL="3000"
 
 NQN_TYPE_LEG_TO_PRIM_TGT="0000"
@@ -489,7 +489,7 @@ function get_sec_to_cntlr_name()
     stripe_id=$3
     dev_id=$4
     cntlr_mgr_id=$5
-    echo "${DEV_PREFIX}-${sec_mgr_id}-${vd_id}-${DEV_TYPE_PRIM_TO_CNTLR}-${stripe_id}-${dev_id}-${cntlr_mgr_id}"
+    echo "${DEV_PREFIX}-${sec_mgr_id}-${vd_id}-${DEV_TYPE_SEC_TO_CNTLR}-${stripe_id}-${dev_id}-${cntlr_mgr_id}"
 }
 
 function get_final_dev_name()
