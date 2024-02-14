@@ -291,7 +291,7 @@ function nvme2x_disconnect()
         return
     fi
 
-    address="traddr=${tr_addr} trsvcid=${tr_svc_id}"
+    address="traddr=${tr_addr},trsvcid=${tr_svc_id}"
     nvme_device=$(echo $subsys | jq -rM ".Paths[] | select(.Address | contains(\"${address}\")) | .Name")
     if [ -z "${nvme_device}" ]; then
         return
