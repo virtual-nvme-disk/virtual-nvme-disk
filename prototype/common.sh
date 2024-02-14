@@ -265,6 +265,47 @@ function nvme_disconnect()
 
     echo "nvme_disconnect: [${nqn}] [${tr_addr}] [${tr_svc_id}]"
 
+    # nvme 2.x and 1.x have different formats
+    is_nvme2=$(nvme list-subsys --output-format json | jq -rM 'if type=="array" then "yes" else "no" end')
+    if [ "${is_nvme2}" == "yes" ]; then
+        nvme2x_disconnect ${nqn} ${tr_addr} ${tr_svc_id}
+    else
+        nvme1x_disconnect ${nqn} ${tr_addr} ${tr_svc_id}
+    fi
+}
+
+function nvme2x_disconnect()
+{
+    nqn=$1
+    tr_addr=$2
+    tr_svc_id=$3
+
+    has_path=$(nvme list-subsys --output-format json | jq -rM ".[].Subsystems[] | select(.NQN==\"${nqn}\") | has(\"Paths\")")
+    if [ "${has_path}" == "false" ]; then
+        nvme disconnect --nqn ${nqn}
+        return
+    fi
+
+    subsys=$(nvme list-subsys --output-format json | jq -rM ".[].Subsystems[] | select(.NQN==\"${nqn}\")")
+    if [ -z "${subsys}" ]; then
+        return
+    fi
+
+    address="traddr=${tr_addr} trsvcid=${tr_svc_id}"
+    nvme_device=$(echo $subsys | jq -rM ".Paths[] | select(.Address | contains(\"${address}\")) | .Name")
+    if [ -z "${nvme_device}" ]; then
+        return
+    fi
+
+    nvme disconnect --device ${nvme_device}
+}
+
+function nvme1x_disconnect()
+{
+    nqn=$1
+    tr_addr=$2
+    tr_svc_id=$3
+
     has_subsys=$(nvme list-subsys --output-format json | jq -rM 'has("Subsystems")')
     if [ "${has_subsys}" == "false" ]; then
         return
